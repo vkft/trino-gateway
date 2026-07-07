@@ -521,6 +521,22 @@ final class TestTrinoQueryProperties
         assertThat(trinoQueryProperties.getTables()).isEmpty();
     }
 
+    @Test
+    void testQueryParsingWhenNoContentType()
+            throws IOException
+    {
+        String query = "SELECT * FROM mycatalog.myschema.mytable";
+        ContainerRequestContext mockRequest = prepareMockRequest(query, null);
+
+        TrinoQueryProperties trinoQueryProperties = new TrinoQueryProperties(mockRequest, false, 1024 * 1024);
+
+        // Trino HTTP clients commonly omit the charset parameter; treat the body as UTF-8 so routing rules still see the parsed query.
+        assertThat(trinoQueryProperties.getCatalogs()).containsExactly("mycatalog");
+        assertThat(trinoQueryProperties.getSchemas()).containsExactly("myschema");
+        assertThat(trinoQueryProperties.getTables()).hasSize(1);
+        assertThat(trinoQueryProperties.isQueryParsingSuccessful()).isTrue();
+    }
+
     private ContainerRequestContext prepareMockRequest(String query)
     {
         return prepareMockRequest(query, MediaType.valueOf("application/json; charset=UTF-8"));
