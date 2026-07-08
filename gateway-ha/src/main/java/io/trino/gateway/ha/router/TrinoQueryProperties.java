@@ -273,7 +273,8 @@ public class TrinoQueryProperties
             // dbt-trino does not send mediaType at all; RFC 7231 leaves the default charset to the recipient;
             // Trino's coordinator decodes statement bodies as UTF-8, and most Trino clients omit the parameter.
             charset = UTF_8.name();
-        } else {
+        }
+        else {
             charset = mediaType.getParameters().get("charset");
             if (charset == null) {
                 // RFC 7231 leaves the default charset to the recipient; Trino's coordinator

@@ -523,7 +523,6 @@ final class TestTrinoQueryProperties
 
     @Test
     void testQueryParsingWhenNoContentType()
-            throws IOException
     {
         String query = "SELECT * FROM mycatalog.myschema.mytable";
         ContainerRequestContext mockRequest = prepareMockRequest(query, null);
